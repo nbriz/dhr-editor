@@ -1,0 +1,11 @@
+{
+  "/": {
+    "template": "index",
+    "queries": [
+      {
+        "table": "homepage",
+        "pop": "populate=*"
+      }
+    ]
+  }
+}

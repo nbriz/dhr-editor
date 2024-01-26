@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <title>EXAMPLE</title>
+    <%- include('./partials/dhr-meta-tags'); %>
+  </head>
+  <body>
+
+    <main>
+      <h1 style="width: 50vw;"><%= data.homepage.title %></h1>
+    </main>
+
+    <input type="text" id="email" placeholder="email">
+    <input type="password" id="password" placeholder="password">
+    <button type="button" id="login">login</button>
+    <button type="button" id="logout">logout</button>
+    <br><hr><br>
+    <input type="text" id="text" value="<%= data.homepage.title %>">
+    <button type="button" id="save">save</button>
+    <br>
+
+    <script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
+    <script>
+
+      nn.get('#logout').on('click', async () => {
+        const data = {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+          }
+        }
+        const req = await window.fetch('api/logout', data)
+        const json = await req.json()
+        console.log(json)
+      })
+
+      nn.get('#login').on('click', async () => {
+        const email = nn.get('#email').value
+        const password = nn.get('#password').value
+        const data = {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password })
+        }
+
+        const req = await window.fetch('api/login', data)
+        const json = await req.json()
+        console.log(json)
+      })
+
+      nn.get('#save').on('click', async () => {
+        const title = nn.get('#text').value
+        const data = {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ title })
+        }
+
+        const req = await window.fetch('api/update', data)
+        const json = await req.json()
+        if (!json.error) {
+          const t = json.data.data.attributes.title
+          nn.get('h1').innerText = t
+        } else {
+          alert(json.error)
+        }
+      })
+
+
+    </script>
+
+  </body>
+</html>
