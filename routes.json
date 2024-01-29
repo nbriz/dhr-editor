@@ -7,5 +7,14 @@
         "pop": "populate=*"
       }
     ]
+  },
+  "editor": {
+    "template": "editor",
+    "queries": [
+      {
+        "table": "homepage",
+        "pop": "populate=*"
+      }
+    ]
   }
 }

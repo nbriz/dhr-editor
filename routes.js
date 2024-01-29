@@ -5,6 +5,9 @@ const axios = require('axios').default
 const showdown = require('showdown')
 const converter = new showdown.Converter()
 
+const jwt = require('jsonwebtoken')
+const JWT_SECRET = process.env.JWT_SECRET
+
 const mdFieldKeys = ['content']
 const domain = 'theclass.website'
 const routes = require('./routes.json')
@@ -92,9 +95,25 @@ router.use(cookieParser())
 
 // .............
 // LOGIN ..............................
-router.post('/api/login', async (req, res) => {
-  console.log('received data:', req.body)
+async function getUserInfo (token) {
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET)
+    const url = `http://localhost:1337/api/users/${decoded.id}`
+    const Authorization = `Bearer ${token}`
+    const response = await axios.get(url, { headers: { Authorization } })
+    return response
+  } catch (error) {
+    return { error }
+  }
+}
 
+function getReqAuthHeaders (req) {
+  const Authorization = `Bearer ${req.cookies.AccessToken}`
+  const opts = { headers: { 'Content-Type': 'application/json', Authorization } }
+  return opts
+}
+
+router.post('/api/login', async (req, res) => {
   if (!req.body.email || !req.body.password) {
     return res.status(400).json({
       error: 'email and password fields are required'
@@ -106,17 +125,17 @@ router.post('/api/login', async (req, res) => {
     identifier: req.body.email,
     password: req.body.password
   }
-  console.log(data)
   try {
     const response = await axios.post(url, data)
     const jwtToken = response.data.jwt
     const oneDay = 24 * 60 * 60 * 1000
+
+    const user = await getUserInfo(jwtToken)
     res.cookie('AccessToken', jwtToken, {
       maxAge: oneDay,
       httpOnly: true
-    }).json({ message: 'access granted' })
+    }).json({ message: 'access granted', data: user.data })
   } catch (error) {
-    console.error('error logging in:', error)
     res.json({ error: 'error logging in' })
   }
 })
@@ -127,26 +146,50 @@ router.post('/api/logout', (req, res) => {
   })
 })
 
+router.get('/api/user-info', async (req, res) => {
+  const token = req.cookies.AccessToken
+  if (!token) {
+    return res.json({ auth: false, error: 'unauthorized: no token provided' })
+  }
+  const user = await getUserInfo(token)
+  if (user.error) {
+    res.json({ auth: true, error: 'authorized, but could not find user' })
+  } else res.json({ auth: true, data: user.data })
+})
+
 // .............
-// POSTING UPDATES TO HOMEPAGE ..............................
+// GETTING / POSTING UPDATES TO DATABASE ..............................
 // https://docs.strapi.io/dev-docs/api/rest#update-an-entry
-router.post('/api/update', async (req, res) => {
-  const url = 'http://localhost:1337/api/homepage'
-  const data = { data: { title: req.body.title } }
-  const Authorization = `Bearer ${req.cookies.AccessToken}`
-  const opts = { headers: { 'Content-Type': 'application/json', Authorization } }
+
+router.get('/api/latest-code/:file', async (req, res) => {
+  let url = `http://localhost:1337/api/${req.params.file}`
+  url += '?sort=createdAt:desc&pagination[limit]=1'
+  const opts = getReqAuthHeaders(req)
   try {
-    const response = await axios.put(url, data, opts)
-    // console.log('data updated successfully', response.data)
-    res.json({ message: 'data updated successfully', data: response.data })
+    const response = await axios.get(url, opts)
+    res.json({ data: response.data.data[0] })
+  } catch (error) {
+    // console.log(error)
+    res.json({ error: error })
+  }
+})
+
+router.post('/api/update-code/:file', async (req, res) => {
+  const url = `http://localhost:1337/api/${req.params.file}`
+  const data = { data: { code: req.body.code, username: req.body.username } }
+  const opts = getReqAuthHeaders(req)
+  try {
+    const response = await axios.post(url, data, opts)
+    res.json({ message: 'code update saved', data: response.data })
   } catch (err) {
-    // console.log('error putting data', err)
     res.json({ error: 'error updating data' })
   }
 })
 
 // .............
-// GET REQUESTS ...................................................
+// OTHER GET REQUESTS ...................................................
+// ......................................................................
+// ......................................................................
 router.get('/api/:path', async (req, res) => {
   const path = req.params.path === 'home' ? '/' : req.params.path
   const data = await getData(path)
@@ -170,8 +213,10 @@ router.get('*', async (req, res) => {
   const url = req.originalUrl.split('/').filter(s => s !== '')
   // NOTE: refer to ignite/CLATA for localization example where
   // url[0] is either /es or /en
-  const path = url[0] || '/'
+  let path = url[0] || '/'
   const page = url[1]
+
+  path = (path.includes('?')) ? path.split('?')[0] : path
 
   const imgRoot = req.hostname.includes('localhost')
     ? 'http://localhost:1337' : `https://edit.${domain}`
