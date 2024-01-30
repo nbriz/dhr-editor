@@ -151,6 +151,7 @@ router.post('/api/login', async (req, res) => {
     const oneDay = 24 * 60 * 60 * 1000
 
     const user = await getUserInfo(jwtToken)
+    console.log(user)
     res.cookie('AccessToken', jwtToken, {
       maxAge: oneDay,
       httpOnly: true
