@@ -127,8 +127,8 @@ nn.on('load', async () => {
     if (!json.data) {
       return window.alert('oh snap, something\'s wrong user account, reach out to Nick and let him know!')
     }
-    updateUserData(json)
     console.log('GET user-info', json)
+    updateUserData(json)
     // get latest version of doc
     const data = await getLatestCode()
     ne.code = data.code
@@ -147,8 +147,8 @@ nn.get('#login').on('click', async () => {
   if (json.error) {
     window.alert(json.error)
   } else {
-    updateUserData(json)
     console.log('GET user-login', json)
+    updateUserData(json)
     nn.get('#auth-screen').css({ display: 'none' })
     // get latest version of doc
     const data = await getLatestCode()
