@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "accesses",
+  "info": {
+    "singularName": "access",
+    "pluralName": "accesses",
+    "displayName": "access"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "username": {
+      "type": "string"
+    },
+    "code": {
+      "type": "text"
+    }
+  }
+}

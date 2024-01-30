@@ -11,6 +11,7 @@ const ne = new Netitor({
 })
 
 nn.on('load', window.reset)
+ne.addCustomRoot(`${window.location.protocol}//${window.location.host}/uploads/`)
 
 // •.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•
 // •.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•* handling Netitor's events
@@ -55,6 +56,18 @@ const postObj = {
   }
 }
 
+function pluralize (word) {
+  const lastChar = word.charAt(word.length - 1)
+  const secondLastChar = word.charAt(word.length - 2)
+  if (lastChar === 'y' && !'aeiou'.includes(secondLastChar.toLowerCase())) {
+    return word.substring(0, word.length - 1) + 'ies'
+  } else if (lastChar === 's') {
+    return word + 'es'
+  } else {
+    return word + 's'
+  }
+}
+
 async function saveCode () {
   const urlParams = new URLSearchParams(window.location.search)
   const file = urlParams.get('file')
@@ -63,7 +76,7 @@ async function saveCode () {
   const data = JSON.parse(JSON.stringify(postObj))
   const bodyObj = { file, code: ne.code, username: window.username }
   data.body = JSON.stringify(bodyObj)
-  const req = await window.fetch(`api/update-code/${file}s`, data)
+  const req = await window.fetch(`api/update-code/${pluralize(file)}`, data)
   const json = await req.json()
   console.log('POST update-code', json)
   if (json.error) {
@@ -81,7 +94,7 @@ async function getLatestCode () {
     ne.code = '⚠️ THERE IS NO FILE ID PRESENT IN THIS URL ⚠️'
     return
   }
-  const req = await window.fetch(`api/latest-code/${file}s`)
+  const req = await window.fetch(`api/latest-code/${pluralize(file)}`)
   const json = await req.json()
   if (json.error) {
     const e = 'Couldn\'t find that file, are you sure you typed the correct URL?'

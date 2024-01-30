@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "governances",
+  "info": {
+    "singularName": "governance",
+    "pluralName": "governances",
+    "displayName": "governance"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "username": {
+      "type": "string"
+    },
+    "code": {
+      "type": "text"
+    }
+  }
+}

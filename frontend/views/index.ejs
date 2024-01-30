@@ -3,78 +3,73 @@
   <head>
     <title>EXAMPLE</title>
     <%- include('./partials/dhr-meta-tags'); %>
+    <style media="screen">
+      @import url(https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap);
+
+      body {
+        background: url(https://i.imgur.com/l2TPAmx.jpeg);
+        background-size: 200px;
+        font-family: "DM Serif Display", serif;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        max-width: 1020px;
+        margin: 0 auto;
+        line-height: 80px;
+        text-transform: uppercase;
+        font-size: 48px;
+      }
+
+      .title {
+        padding-top: 111px;
+      }
+
+      .blue-text {
+        color: #137ab1;
+      }
+
+      .big-text {
+        font-size: 95px;
+        text-transform: none;
+      }
+
+      .list {
+        max-width: 1020px;
+        margin: 0 auto;
+      }
+
+      li > a {
+        font-size: 32px;
+        text-decoration: none;
+        color: #137ab1;
+      }
+    </style>
   </head>
   <body>
+    <header>
+      <div class="title">
+        Digitizing
+        <br>
+        <span class="big-text">
+          <span class="blue-text">H</span>uman
+          <span class="blue-text">R</span>ights
+        </span>
+      </div>
+    </header>
 
-    <main>
-      <h1 style="width: 50vw;"><%= data.homepage.title %></h1>
-    </main>
-
-    <input type="text" id="email" placeholder="email">
-    <input type="password" id="password" placeholder="password">
-    <button type="button" id="login">login</button>
-    <button type="button" id="logout">logout</button>
-    <br><hr><br>
-    <input type="text" id="text" value="<%= data.homepage.title %>">
-    <button type="button" id="save">save</button>
-    <br>
-
-    <script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
-    <script>
-
-      nn.get('#logout').on('click', async () => {
-        const data = {
-          method: 'post',
-          headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-          }
-        }
-        const req = await window.fetch('api/logout', data)
-        const json = await req.json()
-        console.log(json)
-      })
-
-      nn.get('#login').on('click', async () => {
-        const email = nn.get('#email').value
-        const password = nn.get('#password').value
-        const data = {
-          method: 'post',
-          headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ email, password })
-        }
-
-        const req = await window.fetch('api/login', data)
-        const json = await req.json()
-        console.log(json)
-      })
-
-      nn.get('#save').on('click', async () => {
-        const title = nn.get('#text').value
-        const data = {
-          method: 'post',
-          headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ title })
-        }
-
-        const req = await window.fetch('api/update', data)
-        const json = await req.json()
-        if (!json.error) {
-          const t = json.data.data.attributes.title
-          nn.get('h1').innerText = t
-        } else {
-          alert(json.error)
-        }
-      })
-
-
-    </script>
+    <section class="list">
+      <hr>
+      <h2>Files:</h2>
+      <ul>
+      <% data.homepage.files.forEach((file) => { %>
+        <li>
+          <a href="/editor?file=<%= file %>"><%= file %></a>
+        </li>
+      <% }); %>
+      </ul>
+    </section>
 
   </body>
 </html>

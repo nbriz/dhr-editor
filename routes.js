@@ -1,6 +1,8 @@
+const path = require('path')
 const express = require('express')
 const router = express.Router()
 const cookieParser = require('cookie-parser')
+const multer = require('multer')
 const axios = require('axios').default
 const showdown = require('showdown')
 const converter = new showdown.Converter()
@@ -11,6 +13,24 @@ const JWT_SECRET = process.env.JWT_SECRET
 const mdFieldKeys = ['content']
 const domain = 'theclass.website'
 const routes = require('./routes.json')
+
+// -----------------------------------------------------------------------------
+// ------------------------------------  HANDLE GETTING && UPLOADING ASSETS
+router.use('/uploads', express.static(path.join(__dirname, 'frontend', 'uploads')))
+
+const imgDestPath = path.join(__dirname, 'frontend', 'uploads')
+const uploadImgStorage = multer.diskStorage({
+  destination: function (req, file, cb) { cb(null, imgDestPath) },
+  filename: function (req, file, cb) { cb(null, file.originalname) }
+})
+const uploadImg = multer({ storage: uploadImgStorage }).single('image')
+
+router.post('/api/upload-image', async (req, res) => {
+  uploadImg(req, res, function (err) {
+    if (err) res.json({ error: err })
+    else res.json({ message: 'image uploaded', name: req.file.filename })
+  })
+})
 
 // ~ - . - ~ * ~ - . - ~ * ~ - . - ~ * ~ - . - ~ * ~ - . - ~ * ~ - . - ~ * ~ - .
 const routesObj = (p, s) => s && isNaN(Number(s)) ? routes[p].subpage : routes[p]

@@ -17,6 +17,9 @@
     },
     "demo": {
       "type": "text"
+    },
+    "files": {
+      "type": "json"
     }
   }
 }

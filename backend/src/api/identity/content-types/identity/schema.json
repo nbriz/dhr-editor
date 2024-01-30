@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "identities",
+  "info": {
+    "singularName": "identity",
+    "pluralName": "identities",
+    "displayName": "identity"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "username": {
+      "type": "string"
+    },
+    "code": {
+      "type": "text"
+    }
+  }
+}
