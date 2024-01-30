@@ -148,6 +148,7 @@ nn.get('#login').on('click', async () => {
     window.alert(json.error)
   } else {
     updateUserData(json)
+    console.log('GET user-login', json)
     nn.get('#auth-screen').css({ display: 'none' })
     // get latest version of doc
     const data = await getLatestCode()
