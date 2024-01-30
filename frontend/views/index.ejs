@@ -69,6 +69,14 @@
         </li>
       <% }); %>
       </ul>
+      <h2>Images:</h2>
+      <ul>
+      <% data.homepage.images.forEach((file) => { %>
+        <li>
+          <a href="/uploads/<%= file %>"><%= file %></a>
+        </li>
+      <% }); %>
+      </ul>
     </section>
 
   </body>
