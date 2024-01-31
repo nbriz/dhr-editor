@@ -219,6 +219,7 @@ window.showTools = () => {
       <button class="upload">upload image</button>
       <!-- <a href="https://imgur.com/upload" target="_blank">upload image</a> -->
       <a href="https://fffuel.co/cccolor/" target="_blank">color picker</a>
+      <a href="https://fonts.google.com//" target="_blank">google fonts</a>
       <a href="https://css-generators.dotenv.dev/" target="_blank">CSS generators</a>
       <a href="https://chat.openai.com/share/2587808d-01da-4b6f-bd0f-51623e93c796" target="_blank">ChatGPT</a>
     </div>
