@@ -152,11 +152,11 @@ router.post('/api/login', async (req, res) => {
   try {
     const response = await axios.post(url, data)
     const jwtToken = response.data.jwt
-    const oneDay = 24 * 60 * 60 * 1000
+    const oneWeek = 24 * 60 * 60 * 1000 * 7
 
     const user = await getUserInfo(jwtToken)
     res.cookie('AccessToken', jwtToken, {
-      maxAge: oneDay,
+      maxAge: oneWeek,
       httpOnly: true
     }).json({ message: 'access granted', data: user.data })
   } catch (error) {
