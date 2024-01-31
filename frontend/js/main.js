@@ -115,10 +115,12 @@ async function getLatestCode () {
 function updateUserData (json) {
   window.username = json.data.username
   window.userid = json.data.id
+  const urlParams = new URLSearchParams(window.location.search)
+  const file = urlParams.get('file')
   nn.get('.username').content(window.username)
   socket.emit('new-action', {
     action: 'user-logged-in',
-    payload: { username: window.username, id: window.userid }
+    payload: { username: window.username, id: window.userid, file }
   })
 }
 

@@ -26,8 +26,10 @@ function setupSocketInfo () {
     // new users logged in or logged out
       const ele = nn.get('#socket-info .users')
       ele.innerHTML = ''
+      const urlParams = new URLSearchParams(window.location.search)
+      const file = urlParams.get('file')
       Object.values(data.users).forEach(u => {
-        if (u.username !== window.username) {
+        if (u.username !== window.username && u.file === file) {
           const span = nn.create('div')
           span.innerHTML = `<span class="status" id="user-${u.id}">○</span> ${u.username}`
           ele.appendChild(span)
