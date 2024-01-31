@@ -43,7 +43,12 @@ ne.on('code-update', () => {
   })
 })
 
-ne.cm.on('keydown', (cm, e) => window.numChange(e))
+ne.cm.on('keydown', (cm, e) => {
+  if (!ne.autoUpdate && (e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    e.preventDefault()
+  }
+  window.numChange(e)
+})
 
 // •.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•
 // •.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•* server communications
@@ -170,6 +175,7 @@ nn.on('keydown', async (e) => {
 
 nn.on('keydown', (e) => {
   if (!ne.autoUpdate && (e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    e.preventDefault()
     ne.update()
   }
 })
