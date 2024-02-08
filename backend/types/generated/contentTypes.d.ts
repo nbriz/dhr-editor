@@ -843,6 +843,37 @@ export interface ApiAgencyAgency extends Schema.CollectionType {
   };
 }
 
+export interface ApiGlossaryGlossary extends Schema.CollectionType {
+  collectionName: 'glossaries';
+  info: {
+    singularName: 'glossary';
+    pluralName: 'glossaries';
+    displayName: 'Glossary';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    username: Attribute.String;
+    code: Attribute.Text;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::glossary.glossary',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::glossary.glossary',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiGovernanceGovernance extends Schema.CollectionType {
   collectionName: 'governances';
   info: {
@@ -1043,6 +1074,7 @@ declare module '@strapi/types' {
       'plugin::i18n.locale': PluginI18NLocale;
       'api::access.access': ApiAccessAccess;
       'api::agency.agency': ApiAgencyAgency;
+      'api::glossary.glossary': ApiGlossaryGlossary;
       'api::governance.governance': ApiGovernanceGovernance;
       'api::homepage.homepage': ApiHomepageHomepage;
       'api::identity.identity': ApiIdentityIdentity;
