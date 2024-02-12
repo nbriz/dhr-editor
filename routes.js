@@ -15,6 +15,7 @@ const mdFieldKeys = ['content']
 const domain = 'theclass.website'
 const routes = require('./routes.json')
 
+router.use('/pages', express.static(path.join(__dirname, 'frontend', 'pages')))
 // -----------------------------------------------------------------------------
 // ------------------------------------  HANDLE GETTING && UPLOADING ASSETS
 router.use('/uploads', express.static(path.join(__dirname, 'frontend', 'uploads')))
@@ -198,12 +199,23 @@ router.get('/api/latest-code/:file', async (req, res) => {
   }
 })
 
+function saveFrontendFile (file, data) {
+  fs.writeFile(`frontend/pages/${file}.html`, data, (err) => {
+    if (err) {
+      console.error('Error writing the file:', err)
+      return
+    }
+    console.log('File saved successfully.')
+  })
+}
+
 router.post('/api/update-code/:file', async (req, res) => {
   const url = `http://localhost:1337/api/${req.params.file}`
   const data = { data: { code: req.body.code, username: req.body.username } }
   const opts = getReqAuthHeaders(req)
   try {
     const response = await axios.post(url, data, opts)
+    saveFrontendFile(req.body.file, req.body.code)
     res.json({ message: 'code update saved', data: response.data })
   } catch (err) {
     res.json({ error: 'error updating data' })

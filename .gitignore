@@ -1,5 +1,6 @@
 **/.DS_Store
 frontend/uploads/*
+frontend/pages/*
 
 # Logs
 logs
