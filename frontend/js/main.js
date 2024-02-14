@@ -1,9 +1,7 @@
 /* global nn, Netitor, resize, socket */
 
-const hk = nn.platformInfo().platform.includes('Mac') ? 'CMD' : 'CTRL'
 const cssPrev = new URLSearchParams(window.location.search).get('preview')
 const isCSS = new URLSearchParams(window.location.search).get('file') === 'style'
-// if (isCSS) window.alert(`don't forget to press ${hk} + Enter to preview your changes (edit the URL to preview a different page)`)
 
 async function getPreview (css) {
   const prev = await window.fetch(`/pages/${cssPrev}.html`)

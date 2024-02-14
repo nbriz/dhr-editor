@@ -216,7 +216,7 @@ window.showTools = () => {
       <button class="tidy">tidy code</button>
       <button class="download">download code</button>
       <button class="save">save code</button>
-      <button class="upload">upload image</button>
+      <button class="upload">upload file</button>
       <!-- <a href="https://imgur.com/upload" target="_blank">upload image</a> -->
       <a href="https://fffuel.co/cccolor/" target="_blank">color picker</a>
       <a href="https://fonts.google.com//" target="_blank">google fonts</a>
