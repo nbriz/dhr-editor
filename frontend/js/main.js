@@ -1,16 +1,45 @@
 /* global nn, Netitor, resize, socket */
 
+const hk = nn.platformInfo().platform.includes('Mac') ? 'CMD' : 'CTRL'
+const cssPrev = new URLSearchParams(window.location.search).get('preview')
+const isCSS = new URLSearchParams(window.location.search).get('file') === 'style'
+// if (isCSS) window.alert(`don't forget to press ${hk} + Enter to preview your changes (edit the URL to preview a different page)`)
+
+async function getPreview (css) {
+  const prev = await window.fetch(`/pages/${cssPrev}.html`)
+  let html = await prev.text()
+
+  html = html.replace('<link rel="stylesheet" href="/pages/style.css">', `<style>${css}</style>`)
+  html = html.replace(/<img src="(.*?)"/g, '<img src="uploads/$1"')
+
+  const frame = document.querySelector('#output')
+  const iframe = frame.children[0] ? frame.children[0] : document.createElement('iframe')
+  iframe.style.width = '100%'
+  iframe.style.height = '100%'
+  frame.appendChild(iframe)
+  const iframeDocument = iframe.contentWindow.document
+  iframeDocument.open()
+  iframeDocument.write(html)
+  iframeDocument.close()
+}
+
 const ne = new Netitor({
   ele: '#editor',
-  render: '#output',
+  render: isCSS ? null : '#output',
   renderWithErrors: true,
   theme: window.localStorage.getItem('theme') || 'dark',
   wrap: true,
-  language: 'html',
+  language: isCSS ? 'css' : 'html',
   code: 'loading...'
 })
 
+if (isCSS) {
+  getPreview(ne.code)
+  ne.on('code-update', getPreview)
+}
+
 nn.on('load', window.reset)
+
 ne.addCustomRoot(`${window.location.protocol}//${window.location.host}/uploads/`)
 
 // •.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•*•.¸¸¸.•

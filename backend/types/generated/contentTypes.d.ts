@@ -1031,6 +1031,37 @@ export interface ApiPropertyProperty extends Schema.CollectionType {
   };
 }
 
+export interface ApiStyleStyle extends Schema.CollectionType {
+  collectionName: 'styles';
+  info: {
+    singularName: 'style';
+    pluralName: 'styles';
+    displayName: 'style';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    username: Attribute.String;
+    code: Attribute.Text;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::style.style',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::style.style',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiWorkWork extends Schema.CollectionType {
   collectionName: 'works';
   info: {
@@ -1080,6 +1111,7 @@ declare module '@strapi/types' {
       'api::identity.identity': ApiIdentityIdentity;
       'api::preamble.preamble': ApiPreamblePreamble;
       'api::property.property': ApiPropertyProperty;
+      'api::style.style': ApiStyleStyle;
       'api::work.work': ApiWorkWork;
     }
   }

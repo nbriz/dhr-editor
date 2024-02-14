@@ -200,7 +200,8 @@ router.get('/api/latest-code/:file', async (req, res) => {
 })
 
 function saveFrontendFile (file, data) {
-  fs.writeFile(`frontend/pages/${file}.html`, data, (err) => {
+  const ext = file === 'style' ? 'css' : 'html'
+  fs.writeFile(`frontend/pages/${file}.${ext}`, data, (err) => {
     if (err) {
       console.error('Error writing the file:', err)
       return
