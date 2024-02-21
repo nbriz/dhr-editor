@@ -1,5 +1,5 @@
 window.imageUploader = (ele, opts, func) => {
-  const types = opts.types || ['image/jpeg', 'image/png', 'image/gif', 'text/csv']
+  const types = opts.types || ['image/jpeg', 'image/png', 'image/gif', 'text/csv', 'image/svg+xml']
   const maxSize = opts.maxSize || 1000
 
   function isAllowed (type) {
